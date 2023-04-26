@@ -65,10 +65,16 @@ public class APASoftLoader {
                 sb.append(part[8]).append(SEP); // movil
                 sb.append(MADRID).append(SEP); // provincia
                 sb.append("").append(SEP); // cp
-                sb.append(part[0]).append(SEP); // CCC
+                sb.append("").append(SEP); // CCC
                 sb.append("").append(SEP); // fecha firma
                 sb.append(part[2]).append(SEP); // notas
 
+                sb.append("").append(SEP); // sep
+                sb.append("").append(SEP); // oct
+                sb.append("45,00").append(SEP); // nov
+                sb.append("").append(SEP); // dic
+                sb.append("").append(SEP); // vacia en el excel
+                sb.append("").append(SEP); // vacia en el excel
                 sb.append("").append(SEP); // ene
                 sb.append("").append(SEP); // feb
                 sb.append("").append(SEP); // mar
@@ -77,10 +83,6 @@ public class APASoftLoader {
                 sb.append("").append(SEP); // jun
                 sb.append("").append(SEP); // jul
                 sb.append("").append(SEP); // ago
-                sb.append("").append(SEP); // sep
-                sb.append("").append(SEP); // oct
-                sb.append("45").append(SEP); // nov
-                sb.append("").append(SEP); // dic
 
                 if (part[4].indexOf(",") > -1) {
                     nombre = part[4].substring(part[4].indexOf(",") + 1).trim();
