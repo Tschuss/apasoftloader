@@ -26,6 +26,7 @@ public class APASoftLoader {
 
     private static void loadSocios() {
 
+        long time1 = System.currentTimeMillis();
         try (BufferedReader br = new BufferedReader(
                 new FileReader(BASE_PATH + SOCIOS_SOURCE_FILE, StandardCharsets.UTF_8));
                 PrintWriter pw = new PrintWriter(new FileWriter(SOCIOS_TARGET_FILE, StandardCharsets.UTF_8))) {
@@ -36,7 +37,7 @@ public class APASoftLoader {
             StringBuilder sb = new StringBuilder();
             String nombre = "";
             String apellidos = "";
-
+            int count = 0;
             while (line != null) {
                 part = line.split(SEP);
 
@@ -108,10 +109,14 @@ public class APASoftLoader {
                 sb.append("").append(SEP); // cp
                 sb.append("").append(SEP); // notas
 
+                // next
                 pw.println(sb.toString());
                 sb.setLength(0);
                 line = br.readLine();
+                count++;
             }
+            long time2 = System.currentTimeMillis();
+            System.out.println("Tutores: " + count + " en " + (time2 - time1) / 1000.0 + "s");
 
         } catch (IOException e) {
 
@@ -121,7 +126,7 @@ public class APASoftLoader {
     }
 
     private static void loadAlumnos() {
-
+        long time1 = System.currentTimeMillis();
         try (BufferedReader br = new BufferedReader(
                 new FileReader(BASE_PATH + ALUMNOS_SOURCE_FILE, StandardCharsets.UTF_8));
                 PrintWriter pw = new PrintWriter(new FileWriter(ALUMNOS_TARGET_FILE, StandardCharsets.UTF_8))) {
@@ -132,17 +137,18 @@ public class APASoftLoader {
             StringBuilder sb = new StringBuilder();
             String nombre = "";
             String apellidos = "";
+            int count = 0;
             while (line != null) {
                 part = line.split(SEP);
 
-                if (part[0].indexOf(",") > -1) {
-                    nombre = part[1].substring(part[0].indexOf(",") + 1).trim();
-                    apellidos = part[0].substring(0, part[0].indexOf(",")).trim();
-                } else if (part[0].indexOf(" ") > -1) {
-                    nombre = part[0].substring(0, part[0].indexOf(" ")).trim();
-                    apellidos = part[0].substring(part[0].indexOf(" ") + 1).trim();
+                if (part[1].indexOf(",") > -1) {
+                    nombre = "\"" + part[1].substring(part[1].indexOf(",") + 1).trim();
+                    apellidos = part[1].substring(0, part[1].indexOf(",")).trim() + "\"";
+                } else if (part[1].indexOf(" ") > -1) {
+                    nombre = part[1].substring(0, part[1].indexOf(" ")).trim() + "\"";
+                    apellidos = "\"" + part[1].substring(part[1].indexOf(" ") + 1).trim();
                 } else {
-                    nombre = part[0].trim();
+                    nombre = part[1].trim();
                     apellidos = "";
                 }
 
@@ -168,6 +174,7 @@ public class APASoftLoader {
                 sb.append(formatoFecha(part[4])).append(SEP); // Fecha Alta
 
                 sb.append("").append(SEP); // Apellidos y Nombre Padre/Madre
+                sb.append("").append(SEP); // COLUMNA NO VALIDA
                 sb.append("").append(SEP); // Teléfono
                 sb.append("").append(SEP); // Apellidos y Nombre(2) Padre/Madre
                 sb.append("").append(SEP); // Teléfono (2)
@@ -176,6 +183,8 @@ public class APASoftLoader {
 
                 sb.append("").append(SEP); // Código Actividad
                 sb.append("").append(SEP); // Código Actividad
+                sb.append("").append(SEP); // COLUMNA NO VALIDA
+                sb.append("").append(SEP); // COLUMNA NO VALIDA
                 sb.append("").append(SEP); // Código Actividad
                 sb.append("").append(SEP); // Código Actividad
                 sb.append("").append(SEP); // Código Actividad
@@ -185,7 +194,12 @@ public class APASoftLoader {
                 pw.println(sb.toString());
                 sb.setLength(0);
                 line = br.readLine();
+                count++;
             }
+
+            long time2 = System.currentTimeMillis();
+            System.out.println("Alumnos: " + count + " en " + (time2 - time1) / 1000.0 + "s");
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -194,6 +208,7 @@ public class APASoftLoader {
 
     static String formatoFecha(String org) {
         String[] part = org.split("-");
+        String fecha = "";
         if (part.length < 3) {
             return "";
         } else {
@@ -238,7 +253,15 @@ public class APASoftLoader {
                 default:
                     month = "01";
             }
-            return part[0] + "-" + month + "-20" + part[2];
+            if (part[0].length() == 1) {
+                fecha += "0";
+            }
+            fecha += part[0] + "-" + month + "-";
+            if (part[2].length() <= 2) {
+                fecha += "20";
+            }
+            fecha += part[2];
+            return fecha;
         }
     }
 

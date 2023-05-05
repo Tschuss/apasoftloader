@@ -1,2 +1,7 @@
 Importar_Socios.csv
 Importar_Alumnos.csv
+Importar_Alumnos.xls
+.gitignore
+*.csv
+*.xls
+*.xlsx
